@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Malaysia Startup Dashboard — Top 50 · NVIDIA Inception</title>
+<title>Malaysia Startup Dashboard — Top 45 · NVIDIA Inception</title>
 <style>
   :root{
     --bg:#0b0f14; --panel:#121822; --panel-2:#0e141d; --border:#232b38;
@@ -22,7 +22,7 @@
   header .accent{color:var(--accent);}
   header .sub{color:var(--text-dim); font-size:14px; margin:2px 0;}
   .disclaimer{max-width:900px; margin-top:14px; padding:12px 14px; background:#1a1408; border:1px solid #3a2c0f; border-radius:8px; font-size:13px; color:#e0c98a;}
-  .container{padding:24px 28px 60px; max-width:1400px; margin:0 auto;}
+  .container{padding:24px 28px 60px; max-width:1500px; margin:0 auto;}
   .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:28px;}
   .stat{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px;}
   .stat .n{font-size:26px; font-weight:700; color:var(--text);}
@@ -34,18 +34,21 @@
     padding:8px 12px; border-radius:7px; font-size:13px;
   }
   .controls input[type=text]{min-width:220px;}
-  table{width:100%; border-collapse:collapse; background:var(--panel); border-radius:10px; overflow:hidden; border:1px solid var(--border);}
+  .table-wrap{overflow-x:auto; border-radius:10px; border:1px solid var(--border);}
+  table{width:100%; min-width:1280px; border-collapse:collapse; background:var(--panel);}
   thead th{
     position:sticky; top:0; background:var(--panel-2); color:var(--text-dim);
     text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
     padding:10px 12px; border-bottom:1px solid var(--border); cursor:pointer; white-space:nowrap;
   }
   thead th:hover{color:var(--text);}
-  tbody tr{border-bottom:1px solid var(--border); cursor:pointer;}
-  tbody tr:hover{background:#161d29;}
+  tbody tr.main-row{border-bottom:1px solid var(--border); cursor:pointer;}
+  tbody tr.main-row:hover{background:#161d29;}
   tbody td{padding:10px 12px; font-size:13px; vertical-align:top;}
   .rank{color:var(--text-faint); font-variant-numeric:tabular-nums;}
-  .co-name{font-weight:600;}
+  .co-name{font-weight:600; white-space:nowrap;}
+  .oneliner{max-width:260px; color:var(--text-dim); font-size:12.5px;}
+  .website{white-space:nowrap; font-size:12.5px;}
   .tag{display:inline-block; background:var(--tag-bg); border:1px solid var(--border); border-radius:5px; padding:2px 7px; font-size:11px; color:var(--text-dim); white-space:nowrap;}
   .badge-window{background:#0f2417; color:var(--green); border-color:#1d4a30;}
   .badge-outside{background:#241c0f; color:var(--amber); border-color:#4a3a1d;}
@@ -67,11 +70,11 @@
 <body>
 
 <header>
-  <h1>Malaysia Startup Dashboard <span class="accent">— Top 50</span></h1>
+  <h1>Malaysia Startup Dashboard <span class="accent">— Top 45</span></h1>
   <div class="sub">Window: Feb 27, 2026 – Aug 27, 2026 (6 months) · plus notable earlier-stage companies included for portfolio breadth, dated individually below</div>
   <div class="sub">Curated for pyi@nvidia.com · NVIDIA Inception Team · Pre-Seed through Series D · Malaysia-only scope</div>
   <div class="disclaimer">
-    <strong>Scope note:</strong> A genuinely sourced, Malaysia-only list of companies funded/launched in the strict last 6 months totals roughly 20 real entries — this dashboard was broadened (per user direction) to include notable active Malaysia AI/tech startups beyond that window to reach 50; every row's <em>Date</em> and <em>Window</em> column shows whether it falls inside the 6-month cutoff or was added for breadth. Salesforce account / Inception membership status could not be checked (no CRM access in this environment) and NVIDIA case-study / workload-acceleration tables from the original skill template were omitted rather than fabricated — the <em>NVIDIA Notes</em> column below is a hedged, qualitative read only. RM→USD figures are approximate (~4.7 MYR/USD).
+    <strong>Update note:</strong> Removed 3 chip/IC-design companies (GreatAsic Technology, SkyeChip, MaiStorage — all doing ASIC/processor/IC design work) per request. Also dropped 2 entries found to be data-quality errors during this pass: Shieldbase AI (confirmed Singapore-HQ'd, not Malaysia — violates the Malaysia-only scope) and Enest (an edible bird's-nest food-processing company, not an AI/tech startup — wrong category entirely). That brings the list to 45, not padded back to 50. Every row now has a verified company website where one could be confirmed (linked), plus a one-line description in the table itself; a handful of small/early companies (FusionAP, Pacton Technologies' parent site, CUSTA, Collektr, NanoSkunkWorkX, Krenovator, Valiance Health) had ambiguous or unconfirmed domains during research — those link to their best-available official site, flagged in the detail view where confidence is lower. Salesforce/Inception status still unavailable (no CRM access here).
   </div>
 </header>
 
@@ -97,11 +100,14 @@
     </select>
   </div>
 
+  <div class="table-wrap">
   <table id="dashTable">
     <thead>
       <tr>
         <th data-key="rank">#</th>
         <th data-key="name">Company</th>
+        <th data-key="website">Website</th>
+        <th data-key="oneLiner">What they do</th>
         <th data-key="vertical">Vertical</th>
         <th data-key="stage">Stage</th>
         <th data-key="amountUsd">Amount</th>
@@ -113,6 +119,7 @@
     </thead>
     <tbody id="tbody"></tbody>
   </table>
+  </div>
   <div class="empty" id="emptyMsg" style="display:none;">No companies match these filters.</div>
 
   <div class="section">
@@ -123,16 +130,9 @@
   <div class="section">
     <h2>Observations</h2>
     <p style="font-size:14px; color:var(--text-dim); max-width:900px;">
-    1. <strong>FinTech dominates real deal flow.</strong> Roughly a third of sourced rounds are fintech/insurtech
-    (PolicyStreet, Qashier, Instapay, Versa, Payd, Cashku, Paywatch, Collektr) — consistent with Malaysia's
-    regulated-industry AI focus noted by DealStreetAsia's Q1 2026 SEA review.<br><br>
-    2. <strong>Sovereign/national-language AI is the clearest NVIDIA-aligned story.</strong> YTL AI Labs' ILMU
-    model and the RM10B YTL–NVIDIA program, plus Mesolitica's from-scratch Malay LLM, represent the two
-    most publicly verifiable NVIDIA-technology fits in the whole pool — most other companies' NVIDIA alignment
-    is inferred/hedged, not confirmed.<br><br>
-    3. <strong>Deal sizes stayed small in 2026.</strong> Malaysia's whole 2026-YTD equity funding total
-    (~$94M across 11 rounds through April, per Tracxn) is smaller than a single large Series round elsewhere in
-    SEA — reinforcing that a real "top 50 in 6 months" pool doesn't exist without broadening scope or window.
+    1. <strong>FinTech still dominates real deal flow</strong> — PolicyStreet, Qashier, Instapay, Versa, Payd, Cashku, Paywatch, Hata, MADCash, BLOX — consistent with Malaysia's regulated-industry AI focus noted by DealStreetAsia's Q1 2026 SEA review.<br><br>
+    2. <strong>Removing chip-design plays narrows, but doesn't erase, the hardware story.</strong> With GreatAsic, SkyeChip, and MaiStorage out, Stratus Global Holdings (semiconductor cleanroom automation, not chip design) and NanoSkunkWorkX (graphene/deep-tech materials) remain the closest hardware-adjacent entries.<br><br>
+    3. <strong>Sovereign/national-language AI is still the clearest NVIDIA-aligned story.</strong> YTL AI Labs' ILMU model, backed by the RM10B YTL–NVIDIA program, plus Mesolitica's from-scratch Malay LLM, remain the two most publicly verifiable NVIDIA-technology fits in the pool.
     </p>
   </div>
 
@@ -143,308 +143,323 @@
 
 </div>
 
-<footer>Generated by /malaysia-startup-dashboard · NVIDIA Inception · 2026-08-27</footer>
+<footer>Generated by /malaysia-startup-dashboard · NVIDIA Inception · 2026-08-27 (revised)</footer>
 
 <script>
 const DATA = [
-{rank:1,name:"YTL AI Labs (ILMU)",website:null,vertical:"AI Developer Tools",stage:"Corporate/Strategic",amountUsd:null,amountLabel:"RM10B program (YTL-NVIDIA)",date:"2025–2026 (ongoing)",dateSort:"2026-01-01",inWindow:false,investors:"YTL Corporation, NVIDIA (strategic)",align:"🟢",
- what:"Builds Malaysia's sovereign multimodal large language model (ILMU), trained on Malaysian languages and local context, under the RM10 billion YTL–NVIDIA sovereign-AI infrastructure program.",
- interesting:"This is the single most publicly verifiable NVIDIA relationship in the whole dataset — the program is explicitly branded as a YTL–NVIDIA partnership, not an inference.",
+{rank:1,name:"YTL AI Labs (ILMU)",website:"https://www.ytlpowerinternational.com",vertical:"AI Developer Tools",stage:"Corporate/Strategic",amountUsd:null,amountLabel:"RM10B program (YTL-NVIDIA)",date:"2025–2026 (ongoing)",dateSort:"2026-01-01",inWindow:false,investors:"YTL Corporation, NVIDIA (strategic)",align:"🟢",
+ oneLiner:"Built ILMU, Malaysia's first homegrown sovereign LLM, trained on local languages and dialects.",
+ what:"Builds Malaysia's sovereign multimodal large language model (ILMU/ILMUchat), trained on Malaysian languages including Bahasa Melayu, Manglish, and regional dialects like Kelantanese, under the RM10 billion YTL–NVIDIA sovereign-AI infrastructure program. Deployed to 3M+ users via YTL's Yes mobile brand.",
+ interesting:"This is the single most publicly verifiable NVIDIA relationship in the whole dataset — the program is explicitly branded as a YTL–NVIDIA partnership, developed with Universiti Malaya.",
  nvidia:"Publicly confirmed NVIDIA partnership for sovereign AI infrastructure and model training; further software-stack detail (NeMo, NIM, etc.) not independently verified in this pass.",
- source:"https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/", sourceName:"Secondtalent — AI Companies in Malaysia"},
+ source:"https://theedgemalaysia.com/node/808329", sourceName:"The Edge Malaysia — YTL AI Labs rolls out sovereign LLM ILMUchat"},
 
 {rank:2,name:"Zetrix AI",website:"https://zetrix.com",vertical:"CRISP",stage:"Growth",amountUsd:33,amountLabel:"RM156M (~$33M)",date:"Feb 2026",dateSort:"2026-02-01",inWindow:true,investors:"International Finance Corporation",align:"🟢",
+ oneLiner:"Blockchain-and-AI infrastructure platform positioning as Malaysia's national blockchain backbone.",
  what:"Blockchain-and-AI infrastructure platform positioning itself as Malaysia's national blockchain backbone, expanding into AI-adjacent data/compute services.",
  interesting:"Landed IFC as an investor for a RM156M growth round in Feb 2026 — one of the largest single Malaysia rounds inside the 6-month window.",
  nvidia:"AI/data-infrastructure positioning could plausibly involve GPU-accelerated workloads (training, inference-as-a-service); no public confirmation of NVIDIA stack found.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
 
 {rank:3,name:"Respond.io",website:"https://respond.io",vertical:"CRISP",stage:"Series B",amountUsd:60,amountLabel:"RM281M (~$60M)",date:"Jun 2026",dateSort:"2026-06-01",inWindow:true,investors:"Camber Partners",align:"🟠",
+ oneLiner:"Conversational-AI inbox letting businesses manage WhatsApp, Instagram, and other channels in one place.",
  what:"Conversational-AI customer engagement platform letting businesses manage WhatsApp, Instagram, and other messaging channels from one inbox, with AI-assisted routing and automation.",
  interesting:"RM281M Series B is the largest single funding event found in the 6-month window for any Malaysia-HQ company.",
  nvidia:"Conversational-AI inference workload could involve NIM-hosted LLMs, but the company's actual model-serving stack (cloud API vs. self-hosted) is not publicly disclosed.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
 
-{rank:4,name:"Move Robotic",website:null,vertical:"Robotics",stage:"Seed",amountUsd:6.8,amountLabel:"$6.755M",date:"Aug 13, 2026",dateSort:"2026-08-13",inWindow:true,investors:"Undisclosed (per Tracxn)",align:"🟢",
- what:"Robotics startup (name suggests mobile/logistics robotics); full product description not independently verified beyond the Tracxn funding listing.",
+{rank:4,name:"Move Robotic",website:"https://www.moverobotic.com",vertical:"Robotics",stage:"Seed",amountUsd:6.8,amountLabel:"$6.755M",date:"Aug 13, 2026",dateSort:"2026-08-13",inWindow:true,investors:"Undisclosed (per Tracxn)",align:"🟢",
+ oneLiner:"Cyberjaya-based warehouse-automation firm building autonomous mobile robots and storage/retrieval systems.",
+ what:"Warehouse-automation company based in Cyberjaya, providing Autonomous Mobile Robot (AMR) and Automated Storage & Retrieval System (ASRS) technology; aims to expand internationally by 2027.",
  interesting:"One of the most recent rounds in the dataset, closing within two weeks of this dashboard's run date.",
  nvidia:"Robotics companies are a strong structural fit for Isaac ROS/Sim/GR00T-class tooling; specific stack not confirmed.",
- source:"https://tracxn.com/d/geographies/malaysia/__38Ohxh9PbDrn3zM1hNsap8PGvvhrXeHx8MMMXKCotYc", sourceName:"Tracxn — Malaysia Startups"},
+ source:"https://www.bernama.com/en/news.php?id=2126007", sourceName:"BERNAMA — Move Robotic aims to penetrate international market by 2027"},
 
-{rank:5,name:"GreatAsic Technology",website:null,vertical:"Manufacturing & Industrial",stage:"Pre-A",amountUsd:6.6,amountLabel:"RM31M (~$6.6M)",date:"Jun 2026",dateSort:"2026-06-01",inWindow:true,investors:"Vertex Ventures Southeast Asia & India",align:"🟢",
- what:"Semiconductor/AI-chip design company (name implies ASIC design services), backed by a regional tier-1 VC.",
- interesting:"Chip-design startups are rare in the Malaysia pool — this is one of only a handful of hardware-layer companies found.",
- nvidia:"As an ASIC/chip-design shop, could be a customer of NVIDIA's EDA-acceleration software layer (CUTLASS/cuDNN-adjacent design tooling) rather than a GPU-workload company itself; unconfirmed.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
-
-{rank:6,name:"FusionAP",website:null,vertical:"Manufacturing & Industrial",stage:"Pre-Seed",amountUsd:1.7,amountLabel:"RM8M (~$1.7M)",date:"May 2026",dateSort:"2026-05-01",inWindow:true,investors:"Vertex Ventures SEA & India, Southern Capital Group",align:"🟢",
- what:"Founded in 2025; specializes in advanced 2.5D and 3D semiconductor packaging used in assembling high-performance AI chips.",
- interesting:"Directly in the AI-chip supply chain — packaging is a bottleneck step for advanced-node AI silicon production.",
+{rank:5,name:"FusionAP",website:null,vertical:"Manufacturing & Industrial",stage:"Pre-Seed",amountUsd:1.7,amountLabel:"RM8M (~$1.7M)",date:"May 2026",dateSort:"2026-05-01",inWindow:true,investors:"Vertex Ventures SEA & India, Southern Capital Group",align:"🟢",
+ oneLiner:"Semiconductor packaging specialist doing 2.5D/3D packaging for advanced AI chips (not chip design itself).",
+ what:"Founded in 2025; specializes in advanced 2.5D and 3D semiconductor packaging used in assembling high-performance AI chips — a packaging/assembly step, not chip design.",
+ interesting:"Directly in the AI-chip supply chain — packaging is a bottleneck step for advanced-node AI silicon production. Kept in this list (unlike GreatAsic/SkyeChip/MaiStorage) because packaging is downstream assembly, not IC/chip design.",
  nvidia:"Packaging technology for AI chips is adjacent to, not built on, NVIDIA software — no direct SDK relevance, but strategically downstream of NVIDIA's own supply chain.",
- source:"https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/", sourceName:"Secondtalent — AI Companies in Malaysia"},
+ source:"https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/", sourceName:"Secondtalent — AI Companies in Malaysia (no confirmed official site found)"},
 
-{rank:7,name:"Mesolitica (MaLLaM)",website:null,vertical:"AI Developer Tools",stage:"Corporate/Open-source",amountUsd:null,amountLabel:"Undisclosed",date:"2025–2026 (ongoing)",dateSort:"2026-01-01",inWindow:false,investors:"Not disclosed",align:"🟢",
+{rank:6,name:"Mesolitica (MaLLaM)",website:"https://mesolitica.com",vertical:"AI Developer Tools",stage:"Corporate/Open-source",amountUsd:null,amountLabel:"Undisclosed",date:"2025–2026 (ongoing)",dateSort:"2026-01-01",inWindow:false,investors:"Not disclosed",align:"🟢",
+ oneLiner:"Built MaLLaM, the first Malay-from-scratch LLM, trained on 200B+ Malay-language tokens.",
  what:"Built MaLLaM, the first Malay-from-scratch large language model, trained on 200+ billion Malay-language tokens, released with open-source NLP tooling.",
  interesting:"One of very few teams globally training a from-scratch LLM for the Malay language rather than fine-tuning an existing base model.",
  nvidia:"Training a from-scratch LLM at this token count almost certainly required a multi-GPU cluster; specific hardware/software stack not publicly confirmed in this pass.",
  source:"https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/", sourceName:"Secondtalent — AI Companies in Malaysia"},
 
-{rank:8,name:"SkyeChip",website:null,vertical:"Manufacturing & Industrial",stage:"Corporate/Product launch",amountUsd:null,amountLabel:"Undisclosed",date:"2025–2026",dateSort:"2026-01-01",inWindow:false,investors:"Not disclosed",align:"🟢",
- what:"Malaysia's first homegrown AI processor designer; unveiled the MARS1000, a 7nm edge-AI chip aimed at robotics, smart cities, and IoT applications.",
- interesting:"A domestic edge-AI silicon design effort is unusual for the region and directly overlaps with NVIDIA's Jetson-class edge-AI market.",
- nvidia:"Competes at the silicon layer with NVIDIA's edge-AI hardware (Jetson); potential NVIDIA relevance would be indirect (e.g. tooling/benchmarking parity), not a customer relationship.",
- source:"https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/", sourceName:"Secondtalent — AI Companies in Malaysia"},
-
-{rank:9,name:"ADA (Axiata Digital & Analytics)",website:null,vertical:"IT Services / Data Science",stage:"Corporate subsidiary",amountUsd:null,amountLabel:"N/A (Axiata subsidiary)",date:"2025–2026 (ongoing)",dateSort:"2026-01-01",inWindow:false,investors:"Axiata Group (parent)",align:"🟢",
- what:"Independent data-and-AI firm operating across Asia with a reported 174M+ customer footprint, building agentic AI and Copilot-style solutions for enterprises.",
- interesting:"Scale (174M+ customers touched) is unusual for a Malaysia-linked entity, though it operates regionally under Axiata's telco umbrella rather than as an independent startup.",
+{rank:7,name:"ADA (Axiata Digital & Analytics)",website:"https://www.axiata.com/brands/ada",vertical:"IT Services / Data Science",stage:"Corporate subsidiary",amountUsd:null,amountLabel:"N/A (Axiata subsidiary)",date:"2025–2026 (ongoing)",dateSort:"2026-01-01",inWindow:false,investors:"Axiata Group (parent), Softbank, Mitsui, Sumitomo (shareholders)",align:"🟢",
+ oneLiner:"Data-and-AI firm across Asia building agentic AI and Copilot-style enterprise tools.",
+ what:"Independent data-and-AI firm dual-headquartered in Singapore and Malaysia, reporting a 174M+ customer footprint across 9 markets, building agentic AI and Copilot-style solutions for enterprises.",
+ interesting:"Scale (174M+ customers touched) is unusual for a Malaysia-linked entity, though it operates regionally under Axiata's telco umbrella and is dual-HQ'd with Singapore rather than being a pure Malaysia startup.",
  nvidia:"Enterprise agentic-AI and Copilot workloads at this scale plausibly involve GPU inference infrastructure; no public confirmation of NVIDIA stack.",
  source:"https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/", sourceName:"Secondtalent — AI Companies in Malaysia"},
 
-{rank:10,name:"Agmo Holdings",website:null,vertical:"AI Developer Tools",stage:"Public (Bursa Malaysia)",amountUsd:null,amountLabel:"Public company",date:"2025–2026 (ongoing)",dateSort:"2026-01-01",inWindow:false,investors:"Public shareholders (Bursa Malaysia listed)",align:"🟠",
- what:"Bursa Malaysia-listed company offering an agentic-AI platform for SMEs via SMEHero.ai and MerdekaLLM.",
+{rank:8,name:"Agmo Holdings",website:"https://www.agmo.group",vertical:"AI Developer Tools",stage:"Public (Bursa Malaysia)",amountUsd:null,amountLabel:"Public company",date:"2025–2026 (ongoing)",dateSort:"2026-01-01",inWindow:false,investors:"Public shareholders (Bursa Malaysia listed)",align:"🟠",
+ oneLiner:"Bursa-listed digital solutions group running SMEHero.ai and MerdekaLLM for SME/gov agentic AI.",
+ what:"Bursa Malaysia-listed digital solutions and app-development group offering an agentic-AI platform for SMEs via SMEHero.ai, plus MerdekaLLM, a locally hosted 'AI Sovereignty as a Service' offering for businesses and government agencies.",
  interesting:"Already publicly listed, which under the Inception hard-filter rules (post-IPO disqualification) means this entry is informational only, not an Inception-pipeline candidate.",
  nvidia:"SME-facing LLM tooling (MerdekaLLM) could run on GPU inference infra; no confirmation found.",
- source:"https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/", sourceName:"Secondtalent — AI Companies in Malaysia"},
+ source:"https://www.merdekallm.com/", sourceName:"Merdeka LLM by Agmo Group"},
 
-{rank:11,name:"MaiStorage Technology",website:null,vertical:"Manufacturing & Industrial",stage:"Corporate/Product",amountUsd:null,amountLabel:"Undisclosed",date:"2025–2026",dateSort:"2026-01-01",inWindow:false,investors:"Not disclosed",align:"🟢",
- what:"Focuses on AI storage and IC design, offering the aiDAPTIV+ AI training platform and specialized storage solutions for data centers.",
- interesting:"Storage-layer AI infrastructure is a less-covered niche relative to compute-layer startups in the same pool.",
- nvidia:"Data-center AI storage is complementary to (not competitive with) NVIDIA GPU compute; potential integration point for training-pipeline I/O, unconfirmed.",
- source:"https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/", sourceName:"Secondtalent — AI Companies in Malaysia"},
-
-{rank:12,name:"Shieldbase AI",website:null,vertical:"Cybersecurity",stage:"Seed",amountUsd:0.08,amountLabel:"$80,040",date:"Jul 2025",dateSort:"2025-07-01",inWindow:false,investors:"Not disclosed (per Tracxn)",align:"🟠",
- what:"AI-driven cybersecurity company; specific product not independently verified beyond the Tracxn funding record.",
- interesting:"Funding size ($80K) is unusually small even for seed stage, suggesting an early/friends-and-family style round rather than institutional seed.",
- nvidia:"Cybersecurity AI workloads (anomaly detection, threat classification) map to Morpheus/DOCA-class tooling; not confirmed for this company.",
- source:"https://tracxn.com/d/artificial-intelligence/ai-startups-in-malaysia/__hVSSp7FF1uvnLIn7K53lSbzVrwTNBT3_PF67AJ6TRYQ", sourceName:"Tracxn — AI Startups in Malaysia"},
-
-{rank:13,name:"Neuramatix",website:null,vertical:"AI Developer Tools",stage:"Seed",amountUsd:1.49,amountLabel:"$1.49M",date:"2023 (founded 2002)",dateSort:"2023-01-01",inWindow:false,investors:"Not disclosed (per Tracxn)",align:"🟠",
- what:"Develops neural-network technology; one of Malaysia's longest-running AI-labeled companies (founded 2002), per Tracxn.",
- interesting:"A 20+ year old company still classified as 'seed' funded illustrates how nascent formal VC funding is for deep-tech AI in Malaysia.",
- nvidia:"Neural-network R&D company; no public confirmation of GPU/NVIDIA training stack.",
- source:"https://tracxn.com/d/artificial-intelligence/ai-startups-in-malaysia/__hVSSp7FF1uvnLIn7K53lSbzVrwTNBT3_PF67AJ6TRYQ", sourceName:"Tracxn — AI Startups in Malaysia"},
-
-{rank:14,name:"NexMind",website:null,vertical:"Adtech / Martech",stage:"Seed",amountUsd:2.5,amountLabel:"$2.5M",date:"Sep 2023 (founded 2019)",dateSort:"2023-09-01",inWindow:false,investors:"500 Global",align:"🟠",
- what:"AI tools for search-engine optimization — automates keyword research, content generation, and SEO auditing.",
+{rank:9,name:"NexMind",website:"https://www.nexmind.ai",vertical:"Adtech / Martech",stage:"Seed",amountUsd:2.5,amountLabel:"$2.5M",date:"Sep 2023 (founded 2019)",dateSort:"2023-09-01",inWindow:false,investors:"500 Global",align:"🟠",
+ oneLiner:"AI-powered, multilingual SEO platform automating keyword research, content, and ranking.",
+ what:"Developer of the world's first multilingual AI-powered SEO optimization and content-generation platform (flagship product NexODN), supporting 127 languages including Bahasa Malaysia.",
  interesting:"Backed by 500 Global, one of the more active Tier-2 investors across this entire dataset.",
  nvidia:"SEO/content-generation tooling typically runs on hosted LLM APIs rather than self-managed GPU infrastructure; low direct NVIDIA relevance.",
- source:"https://tracxn.com/d/artificial-intelligence/ai-startups-in-malaysia/__hVSSp7FF1uvnLIn7K53lSbzVrwTNBT3_PF67AJ6TRYQ", sourceName:"Tracxn — AI Startups in Malaysia"},
+ source:"https://www.nexmind.ai/about-us/", sourceName:"NexMind — About Us"},
 
-{rank:15,name:"Qashier",website:null,vertical:"Retail",stage:"Growth",amountUsd:6,amountLabel:"RM28M (~$6M)",date:"Jun 2026",dateSort:"2026-06-01",inWindow:true,investors:"Cocoon Capital, IFP Securities",align:"🟠",
- what:"Point-of-sale and payments platform for SME retailers, bundling inventory, loyalty, and transaction processing.",
+{rank:10,name:"Neuramatix",website:"https://neuramatix.com",vertical:"AI Developer Tools",stage:"Seed",amountUsd:1.49,amountLabel:"$1.49M",date:"2023 (founded 2002)",dateSort:"2023-01-01",inWindow:false,investors:"Not disclosed (per Tracxn)",align:"🟠",
+ oneLiner:"KL-based neural-network R&D lab behind the NeuraBase engine and bionic-arm applications.",
+ what:"Develops neural-network technology via a proprietary engine (NeuraBase) that learns patterns from data similarly to the human brain; one of Malaysia's longest-running AI-labeled companies (founded 2002).",
+ interesting:"A 20+ year old company still classified as 'seed' funded illustrates how nascent formal VC funding is for deep-tech AI in Malaysia.",
+ nvidia:"Neural-network R&D company; no public confirmation of GPU/NVIDIA training stack.",
+ source:"https://neuramatix.com/", sourceName:"Neuramatix — official site"},
+
+{rank:11,name:"Qashier",website:"https://qashier.com/my/",vertical:"Retail",stage:"Growth",amountUsd:6,amountLabel:"RM28M (~$6M)",date:"Jun 2026",dateSort:"2026-06-01",inWindow:true,investors:"Cocoon Capital, IFP Securities",align:"🟠",
+ oneLiner:"All-in-one POS, payments, and loyalty platform for SME retail and F&B businesses.",
+ what:"Point-of-sale and payments platform for SME retailers and F&B businesses, bundling inventory, loyalty, and transaction processing; supports 25,000+ businesses across SEA.",
  interesting:"Growth-stage round inside the 6-month window, signalling continued investor appetite for SME fintech infrastructure.",
  nvidia:"POS/payments software is generally not GPU-native; low direct NVIDIA relevance unless expanding into AI-driven demand forecasting.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
 
-{rank:16,name:"Pacton Technologies",website:null,vertical:"IT Services / Data Science",stage:"Growth",amountUsd:null,amountLabel:"Undisclosed",date:"May 2026",dateSort:"2026-05-01",inWindow:true,investors:"VentureTECH",align:"🟠",
- what:"Technology company at growth stage; specific product not independently verified beyond the funding-tracker listing.",
- interesting:"Investor VentureTECH has backed multiple Malaysia rounds in this dataset (also Bayo Pay), suggesting a recurring domestic fintech-adjacent investor.",
- nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+{rank:12,name:"Pacton Technologies (FishSpeak)",website:"https://www.pacton.com.my/",vertical:"AgTech",stage:"Growth",amountUsd:null,amountLabel:"Undisclosed",date:"May 2026",dateSort:"2026-05-01",inWindow:true,investors:"VentureTECH",align:"🟢",
+ oneLiner:"AI+IoT aquaculture platform (FishSpeak) giving fish/shrimp farms real-time computer-vision insights.",
+ what:"Builds FishSpeak, an AI- and IoT-powered aquaculture management platform combining proprietary computer-vision models with IoT sensors for water quality, feeding optimization, and disease-risk detection, delivered via a WhatsApp-native interface; deployed at 50+ sites nationwide.",
+ interesting:"Backed by VentureTECH, a government-backed impact investor, for ASEAN expansion into Indonesia, Vietnam, Brunei, and the Philippines.",
+ nvidia:"Computer-vision-based aquaculture monitoring is a plausible edge-AI/Jetson-class fit; not confirmed as NVIDIA-based.",
+ source:"https://bernama.com/lite/news.php?id=2561226", sourceName:"BERNAMA — VentureTECH Partners Pacton Technologies"},
 
-{rank:17,name:"Hata",website:null,vertical:"Auto / AV Infra",stage:"Series A",amountUsd:6.8,amountLabel:"RM32M (~$6.8M)",date:"Apr 2026",dateSort:"2026-04-01",inWindow:true,investors:"Bybit",align:"🟠",
- what:"Used-vehicle marketplace and auto-services platform for the Malaysian market.",
- interesting:"Backed by Bybit (a crypto exchange), an unusual investor profile for an automotive marketplace — worth verifying the strategic rationale.",
- nvidia:"Consumer marketplace; low direct NVIDIA relevance unless expanding into computer-vision vehicle inspection.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+{rank:13,name:"Hata",website:"https://hata.io/en/my/",vertical:"FinTech / FSI",stage:"Series A",amountUsd:8,amountLabel:"RM31.6M (~$8M)",date:"Apr 2026",dateSort:"2026-04-01",inWindow:true,investors:"Bybit",align:"🟠",
+ oneLiner:"Dual-licensed Malaysian digital-asset (crypto) exchange trading MYR against 19+ cryptocurrencies.",
+ what:"Malaysia's dual-licensed digital asset exchange (regulated by the Securities Commission Malaysia and Labuan FSA), letting users trade crypto against MYR; 209,000+ registered users, RM1.04B in 2025 transaction volume.",
+ interesting:"Backed by Bybit for a second consecutive round (after a $4.2M seed) — a rare repeat-investor crypto exchange story in this dataset. Corrected from an earlier draft that mischaracterized Hata as a used-vehicle marketplace.",
+ nvidia:"Exchange infrastructure is not typically GPU-native; low direct NVIDIA relevance.",
+ source:"https://www.digitalnewsasia.com/startups/malaysian-digital-asset-exchange-hata-completes-us8mil-series-financing-led-bybit", sourceName:"Digital News Asia — Hata completes US$8mil Series A"},
 
-{rank:18,name:"PolicyStreet",website:"https://policystreet.com",vertical:"FinTech / FSI",stage:"Series C",amountUsd:18,amountLabel:"RM85M (~$18M), first tranche ~$21M reported",date:"Apr 2026",dateSort:"2026-04-01",inWindow:true,investors:"Cool Japan Fund (lead), Altara Ventures, Gobi Partners",align:"🟠",
+{rank:14,name:"PolicyStreet",website:"https://policystreet.com",vertical:"FinTech / FSI",stage:"Series C",amountUsd:18,amountLabel:"RM85M (~$18M), first tranche ~$21M reported",date:"Apr 2026",dateSort:"2026-04-01",inWindow:true,investors:"Cool Japan Fund (lead), Altara Ventures, Gobi Partners",align:"🟠",
+ oneLiner:"Insurtech platform offering digital insurance distribution and embedded-insurance APIs.",
  what:"Insurtech platform offering digital insurance distribution and embedded-insurance APIs for SMEs and consumers in Malaysia.",
  interesting:"Round was reported as 500% oversubscribed, and the company has now raised across four disclosed rounds (2023 Series B through 2026 Series C) tracked in this dataset — a rare repeat-round company in the pool.",
  nvidia:"Insurance-risk modeling could use RAPIDS-class acceleration for underwriting/fraud models; not confirmed for this company.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
 
-{rank:19,name:"CUSTA",website:null,vertical:"Manufacturing & Industrial",stage:"Pre-A",amountUsd:3.6,amountLabel:"RM17M (~$3.6M)",date:"Mar 2026",dateSort:"2026-03-01",inWindow:true,investors:"Delight Ventures, Global Brain",align:"🟠",
- what:"Manufacturing/production-tech company; specific product not independently verified beyond the funding-tracker listing.",
- interesting:"Global Brain (Japan-based) co-investing signals cross-border interest in Malaysia's industrial-tech sector.",
- nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+{rank:15,name:"CUSTA",website:"https://custa.com.my/",vertical:"Retail",stage:"Pre-A",amountUsd:4.3,amountLabel:"$4.3M (RM17M this tranche)",date:"Mar 2026",dateSort:"2026-03-01",inWindow:true,investors:"Delight Ventures, Global Brain",align:"🟠",
+ oneLiner:"Mass-customization e-commerce platform for corporate gifts and printed merchandise across MY/SG.",
+ what:"Mass-customization platform for corporate gifts and printed/personalized merchandise (apparel, bags, drinkware) across Malaysia and Singapore, applying AI across customer service, creative production, and logistics; delivered 500,000+ customized items since 2023.",
+ interesting:"Global Brain (Japan-based) co-investing signals cross-border interest in Malaysia's e-commerce/customization sector.",
+ nvidia:"E-commerce customization workflows could use generative-AI for design/creative production; not confirmed as NVIDIA-based.",
+ source:"https://technode.global/2026/03/13/malaysias-custa-raises-4-3m-to-scale-custom-products-across-sea/", sourceName:"TNGlobal — Malaysia's CUSTA raises $4.3M"},
 
-{rank:20,name:"Aonic",website:null,vertical:"IT Services / Data Science",stage:"Series A",amountUsd:9.6,amountLabel:"RM45M (~$9.6M)",date:"Mar 2026",dateSort:"2026-03-01",inWindow:true,investors:"Kairous Capital",align:"🟠",
- what:"Technology/logistics-adjacent company at Series A; specific product not independently verified beyond the funding-tracker listing.",
- interesting:"Kairous Capital also led Mantayay's Nov 2025 round — a second Kairous-backed company in this dataset.",
- nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+{rank:16,name:"Aonic",website:"https://aonic.com/my/",vertical:"Robotics",stage:"Series A",amountUsd:10,amountLabel:"$10M (RM45M)",date:"Mar 2026",dateSort:"2026-03-01",inWindow:true,investors:"Kairous Capital",align:"🟢",
+ oneLiner:"Malaysian dronetech firm (formerly Poladrone) building enterprise drone solutions for SEA.",
+ what:"Malaysian dronetech firm (rebranded from Poladrone), an all-in-one enterprise drone-solutions provider for agriculture, survey/mapping, construction, and security surveillance, with 50+ service centres across SEA.",
+ interesting:"Corrected from an earlier draft that miscategorized Aonic as a general IT-services company — it's actually a homegrown drone-hardware and services business, founded 2016.",
+ nvidia:"Drone-based computer vision and mapping is a strong structural fit for Jetson/Isaac-class edge-AI tooling; not confirmed as NVIDIA-based.",
+ source:"https://www.prnewswire.com/apac/news-releases/malaysias-aonic-secures-usd-10-million-to-take-home-grown-drone-technology-global-302700759.html", sourceName:"PR Newswire — Malaysia's Aonic Secures USD 10 Million"},
 
-{rank:21,name:"Carsome",website:"https://carsome.com",vertical:"Auto / AV Infra",stage:"Growth",amountUsd:29,amountLabel:"RM135M (~$29M)",date:"Mar 2026",dateSort:"2026-03-01",inWindow:true,investors:"Hong Kong Investment Corporation, Gobi Partners",align:"🟠",
+{rank:17,name:"Carsome",website:"https://www.carsome.my",vertical:"Auto / AV Infra",stage:"Growth",amountUsd:29,amountLabel:"RM135M (~$29M)",date:"Mar 2026",dateSort:"2026-03-01",inWindow:true,investors:"Hong Kong Investment Corporation, Gobi Partners",align:"🟠",
+ oneLiner:"Malaysia's only unicorn — an integrated used-car e-commerce platform across SEA.",
  what:"Malaysia's only unicorn — an integrated used-car e-commerce platform covering inspection, financing, and cross-border resale across SEA.",
  interesting:"Still raising growth capital (RM135M in Mar 2026) years after its 2022 RM1.3B Series E, reflecting continued capital intensity of the used-car marketplace model.",
  nvidia:"Vehicle-inspection computer vision (condition grading, damage detection) is a plausible GPU-inference workload; not publicly confirmed as NVIDIA-based.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
 
-{rank:22,name:"ServAuto",website:null,vertical:"Auto / AV Infra",stage:"Pre-A",amountUsd:4.5,amountLabel:"RM21M (~$4.5M)",date:"Feb 2026",dateSort:"2026-02-01",inWindow:true,investors:"Vynn Capital",align:"🟠",
- what:"Auto-services platform (workshop/service booking or fleet-services tech); specific product not independently verified beyond the funding-tracker listing.",
- interesting:"Vynn Capital has backed at least two mobility-adjacent companies in this dataset (also DF Automation & Robotics).",
+{rank:18,name:"ServAuto",website:"https://about.servauto.com.my",vertical:"Auto / AV Infra",stage:"Pre-A",amountUsd:6,amountLabel:"~$6M raised to date",date:"Feb 2026",dateSort:"2026-02-01",inWindow:true,investors:"Vynn Capital (lead), Openspace, SWC Global, Gobi Partners",align:"🟠",
+ oneLiner:"Automotive aftersales platform digitizing Malaysia's fragmented car-workshop network.",
+ what:"Automotive aftersales platform founded in 2024 by former Carsome executives, digitizing Malaysia's fragmented, largely offline car-workshop and servicing market via a nationwide workshop network.",
+ interesting:"Vynn Capital, which led this round, also backed Carsome — a recurring mobility-focused investor thread in this dataset.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://theedgemalaysia.com/node/792399", sourceName:"The Edge Malaysia — Malaysia's ServAuto secures funding"},
 
-{rank:23,name:"Valiance Health",website:null,vertical:"Healthcare & Life Sciences",stage:"Pre-Seed",amountUsd:null,amountLabel:"Undisclosed",date:"Feb 2026",dateSort:"2026-02-01",inWindow:true,investors:"Gobi Partners",align:"🟢",
- what:"Early-stage healthtech company; specific product not independently verified beyond the funding-tracker listing.",
- interesting:"One of only two healthcare-vertical companies found inside the 6-month window, alongside Naluri's Aug 2025 round (just outside window).",
- nvidia:"Healthcare AI workloads (imaging, clinical NLP) map structurally to Clara/MONAI/BioNeMo; not confirmed for this pre-seed company.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+{rank:19,name:"Valiance Health",website:"https://valiancehealth.com",vertical:"Healthcare & Life Sciences",stage:"Pre-Seed",amountUsd:null,amountLabel:"Undisclosed",date:"Feb 2026",dateSort:"2026-02-01",inWindow:true,investors:"Gobi Partners (SuperSeed II), Jati Growth, Artem Ventures",align:"🟢",
+ oneLiner:"AI healthcare-data platform standardizing hospital clinical/financial data for value-based care.",
+ what:"AI healthcare-data company aggregating clinical, operational, and financial data from hospital systems and using AI to clean, map, and standardize it into a unified repository for reporting, analytics, and insurer/administrator collaboration.",
+ interesting:"Marks Gobi Partners' first healthcare-AI investment in Southeast Asia — one of only two healthcare-vertical companies found inside the 6-month window, alongside Naluri's Aug 2025 round (just outside window).",
+ nvidia:"Healthcare AI workloads (clinical data standardization, NLP) map structurally to Clara/MONAI/BioNeMo; not confirmed for this pre-seed company.",
+ source:"https://technode.global/2026/02/11/gobi-partners-invests-in-malaysia-based-ai-healthcare-firm-valiance-health/", sourceName:"TNGlobal — Gobi Partners invests in Valiance Health"},
 
-{rank:24,name:"BLOX",website:null,vertical:"FinTech / FSI",stage:"Seed",amountUsd:5.9,amountLabel:"$5.884M",date:"Aug 14, 2026",dateSort:"2026-08-14",inWindow:true,investors:"Undisclosed (per Tracxn)",align:"🟠",
- what:"Fintech/crypto-adjacent company (name and sector inferred; not independently verified beyond the Tracxn listing).",
- interesting:"One of the most recent rounds in the entire dataset, closing within the final two weeks of the research window.",
+{rank:20,name:"BLOX (MYRC)",website:"https://www.blox.my",vertical:"FinTech / FSI",stage:"Seed",amountUsd:1,amountLabel:"$1M",date:"Aug 2026",dateSort:"2026-08-01",inWindow:true,investors:"Kivo Technology (lead)",align:"🟠",
+ oneLiner:"Issuer of MYRC, Malaysia's first Ringgit-pegged stablecoin, live on Base/Ethereum/Arbitrum/Solana.",
+ what:"Fintech platform (BLOX Blockchain Sdn Bhd) issuing MYRC, Malaysia's first stablecoin pegged 1:1 to the Malaysian Ringgit, available across Base, Ethereum, Arbitrum, and Solana; reported 33x transaction-volume growth over the prior 12 months.",
+ interesting:"One of the most recent rounds in the entire dataset, closing within the final weeks of the research window.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://tracxn.com/d/geographies/malaysia/__38Ohxh9PbDrn3zM1hNsap8PGvvhrXeHx8MMMXKCotYc", sourceName:"Tracxn — Malaysia Startups"},
+ source:"https://fintechnews.my/60262/blockchain/blox-seed-funding/", sourceName:"Fintech News Malaysia — BLOX Raises US$1 Million Seed Funding"},
 
-{rank:25,name:"Stratusauto",website:null,vertical:"Auto / AV Infra",stage:"IPO",amountUsd:null,amountLabel:"Public listing",date:"Jul 21, 2026",dateSort:"2026-07-21",inWindow:true,investors:"Public shareholders (IPO)",align:"🟠",
- what:"Automotive-sector company that completed a public listing in Jul 2026.",
- interesting:"Already public — per the Inception hard-filter rules this is informational only, not an active pipeline candidate.",
+{rank:21,name:"Stratus Global Holdings",website:"https://stratusauto.com",vertical:"Manufacturing & Industrial",stage:"IPO",amountUsd:null,amountLabel:"RM285M raised via Main Market IPO",date:"Jul 21, 2026",dateSort:"2026-07-21",inWindow:true,investors:"Public shareholders (IPO)",align:"🟠",
+ oneLiner:"Cleanroom semiconductor material-handling (AMHS) specialist that debuted on Bursa Malaysia's Main Market.",
+ what:"Cleanroom automated material-handling system (AMHS) specialist for the semiconductor industry — conveyor-based AMHS, hybrid AMHS, and automated storage/retrieval systems, plus proprietary Total Control Software; founded 1998, based in Bayan Lepas.",
+ interesting:"Corrected from an earlier draft that mislabeled this as an automotive company — it is semiconductor-fab equipment, not chip design (so it stays despite the chip-design removal request). Already public — informational only per the Inception hard-filter rules.",
+ nvidia:"Semiconductor cleanroom logistics software is adjacent to, not built on, NVIDIA tooling; no direct SDK relevance identified.",
+ source:"https://www.thestar.com.my/business/business-news/2026/07/02/stratus-global-launches-rm285mil-main-market-ipo-targets-july-21-listing", sourceName:"The Star — Stratus Global launches RM285mil Main Market IPO"},
+
+{rank:22,name:"Orangeleaf Consulting",website:"https://orangeleaf.com.my",vertical:"IT Services / Data Science",stage:"Acquired (majority stake)",amountUsd:null,amountLabel:"Undisclosed",date:"Aug 5, 2026",dateSort:"2026-08-05",inWindow:true,investors:"Macnica, Inc. (acquirer)",align:"🟠",
+ oneLiner:"Malaysia-founded digital-transformation/Mendix consultancy, majority-acquired by Japan's Macnica.",
+ what:"Malaysia-founded digital transformation and enterprise software (Mendix-based) consultancy with operations across Malaysia, Japan, and Singapore; majority stake acquired by Macnica Inc. (Japan) in Aug 2026 to scale DX services for Japanese manufacturers.",
+ interesting:"Now Singapore-registered as a holding entity while Malaysia-founded — a borderline case for the Malaysia-only scope, flagged here rather than silently included.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://tracxn.com/d/geographies/malaysia/__38Ohxh9PbDrn3zM1hNsap8PGvvhrXeHx8MMMXKCotYc", sourceName:"Tracxn — Malaysia Startups"},
+ source:"https://technode.global/2026/08/05/macnica-invests-in-digital-and-enterprise-software-consultancy-orangeleaf-consulting/", sourceName:"TNGlobal — Macnica invests in Orangeleaf Consulting"},
 
-{rank:26,name:"Enest",website:null,vertical:"Energy (CleanTech / Oil & Gas)",stage:"IPO",amountUsd:null,amountLabel:"Public listing",date:"Jul 15, 2026",dateSort:"2026-07-15",inWindow:true,investors:"Public shareholders (IPO)",align:"🟠",
- what:"Company completing a public listing in Jul 2026; sector inferred from name, not independently verified beyond the Tracxn listing.",
- interesting:"Already public — per the Inception hard-filter rules this is informational only, not an active pipeline candidate.",
+{rank:23,name:"Etiqa",website:"https://www.etiqa.com.my",vertical:"FinTech / FSI",stage:"Acquired (full ownership)",amountUsd:null,amountLabel:"RM4.83B (Maybank buyout of Ageas stake)",date:"Aug 3-4, 2026",dateSort:"2026-08-03",inWindow:true,investors:"Maybank (acquirer), formerly Ageas (seller)",align:"🟠",
+ oneLiner:"Malaysia's #1 takaful/insurance group — Maybank just bought out Ageas for full ownership.",
+ what:"Malaysia's largest non-life takaful and market-leading life/non-life insurer; Maybank acquired Ageas's remaining 30.95% stake in Maybank Ageas Holdings for RM4.83B, taking full ownership.",
+ interesting:"A large, established incumbent, not an early-stage startup — flagged for scoring accuracy rather than an Inception-pipeline recommendation; the deal size (RM4.83B/~$1.2B) far exceeds the $200M-raised disqualification threshold used elsewhere in this dashboard's parent skill.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://tracxn.com/d/geographies/malaysia/__38Ohxh9PbDrn3zM1hNsap8PGvvhrXeHx8MMMXKCotYc", sourceName:"Tracxn — Malaysia Startups"},
+ source:"https://theedgemalaysia.com/node/813072", sourceName:"The Edge Malaysia — Maybank buys remaining stake in Etiqa's holding company"},
 
-{rank:27,name:"Orangeleaf",website:null,vertical:"Retail",stage:"Acquired",amountUsd:null,amountLabel:"Undisclosed",date:"Aug 5, 2026",dateSort:"2026-08-05",inWindow:true,investors:"N/A (acquisition)",align:"🟠",
- what:"Company acquired in Aug 2026; sector inferred, not independently verified beyond the Tracxn listing.",
- interesting:"Recent M&A activity — flagged here as an exit event rather than a fundraise.",
- nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://tracxn.com/d/geographies/malaysia/__38Ohxh9PbDrn3zM1hNsap8PGvvhrXeHx8MMMXKCotYc", sourceName:"Tracxn — Malaysia Startups"},
+{rank:24,name:"NanoSkunkWorkX",website:"https://nanoskunkworkx.com",vertical:"Manufacturing & Industrial",stage:"Growth",amountUsd:null,amountLabel:"Undisclosed",date:"Jul 2025 — outside window",dateSort:"2025-07-01",inWindow:false,investors:"Gobi Partners (Dana Impak Ventures Fund)",align:"🟢",
+ oneLiner:"Deep-tech startup building graphene devices for hydrogen production, AI-accel, and diagnostics.",
+ what:"Deep-tech startup developing manufacturable graphene systems via its cleanroom-free 'SUSANNE' fabrication platform, targeting green-hydrogen electrolysis, semiconductor performance, and next-gen diagnostics; founded by an ex-NASA principal investigator and an MIT-trained computer scientist.",
+ interesting:"Marks Gobi Partners' first deep-tech investment in Southeast Asia; its biosensor platform is developed with Malaysia's Ministry of Health and Universiti Malaya's TIDREC centre.",
+ nvidia:"Explicitly targets 'AI acceleration' as an application area for its graphene devices — a materials-science angle that could intersect with next-gen compute hardware; not confirmed as an NVIDIA relationship.",
+ source:"https://gobi.vc/gobi-partners-leads-investment-in-nanoskunkworkx-to-advance-malaysias-deep-tech-semiconductor-and-clean-energy-ambitions/", sourceName:"Gobi Partners — investment announcement"},
 
-{rank:28,name:"Etiqa",website:null,vertical:"FinTech / FSI",stage:"Acquired (unit)",amountUsd:null,amountLabel:"Undisclosed",date:"Aug 4, 2026",dateSort:"2026-08-04",inWindow:true,investors:"N/A (acquisition)",align:"🟠",
- what:"Established insurance/fintech group (Maybank-linked); an M&A event involving Etiqa was recorded Aug 2026.",
- interesting:"Etiqa is a large incumbent insurer, not an early-stage startup — flagged for scoring accuracy rather than an Inception-pipeline recommendation; likely exceeds the $200M-raised disqualification threshold used elsewhere in this dashboard's parent skill.",
- nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://tracxn.com/d/geographies/malaysia/__38Ohxh9PbDrn3zM1hNsap8PGvvhrXeHx8MMMXKCotYc", sourceName:"Tracxn — Malaysia Startups"},
-
-{rank:29,name:"Naluri",website:"https://naluri.life",vertical:"Healthcare & Life Sciences",stage:"Series B",amountUsd:19.9,amountLabel:"RM23M this round; $19.9M raised across all rounds",date:"Aug 2025 — outside window",dateSort:"2025-08-01",inWindow:false,investors:"TELUS Global Ventures",align:"🟢",
- what:"Healthtech startup blending human coaching with AI-driven personalization for mental and physical health / chronic-disease management programs, sold B2B2C via employers and insurers.",
- interesting:"One of the more mature, well-documented companies in the dataset, with cumulative funding disclosed across multiple rounds rather than a single-round figure.",
- nvidia:"Personalized-health AI/NLP coaching workloads could use NeMo/clinical-NLP tooling; not confirmed as NVIDIA-based.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
-
-{rank:30,name:"NanoSkunkWorkX",website:null,vertical:"Manufacturing & Industrial",stage:"Growth",amountUsd:null,amountLabel:"Undisclosed",date:"Jul 2025 — outside window",dateSort:"2025-07-01",inWindow:false,investors:"Gobi Partners",align:"🟠",
- what:"Deep-tech/nanotechnology company at growth stage; specific product not independently verified beyond the funding-tracker listing.",
- interesting:"Name suggests advanced-materials/nanotech R&D, a rare category in the Malaysia startup pool.",
- nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
-
-{rank:31,name:"Instapay Technologies",website:null,vertical:"FinTech / FSI",stage:"Series A2",amountUsd:2.8,amountLabel:"RM13M (~$2.8M)",date:"Jun 2025 — outside window",dateSort:"2025-06-01",inWindow:false,investors:"US-based family offices",align:"🟠",
- what:"Payments infrastructure company enabling instant/real-time payment rails for Malaysian businesses.",
+{rank:25,name:"Instapay Technologies",website:"https://instapaytech.com",vertical:"FinTech / FSI",stage:"Series A2",amountUsd:2.8,amountLabel:"RM13M (~$2.8M)",date:"Jun 2025 — outside window",dateSort:"2025-06-01",inWindow:false,investors:"US-based family offices",align:"🟠",
+ oneLiner:"Digital salary/e-wallet platform serving unbanked and underbanked workers in Malaysia.",
+ what:"Regulated e-money issuer offering a digital salary and payment platform (e-wallet, prepaid Mastercard) tailored for businesses employing unbanked or underbanked workers.",
  interesting:"Backed by US family offices rather than the region's usual VC names — an atypical investor profile in this dataset.",
  nvidia:"Payments infrastructure is not typically GPU-native; low direct NVIDIA relevance unless expanding into fraud-detection ML.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
 
-{rank:32,name:"Cashku",website:null,vertical:"FinTech / FSI",stage:"Seed",amountUsd:2.1,amountLabel:"RM10M (~$2.1M)",date:"Aug 2025 — outside window",dateSort:"2025-08-01",inWindow:false,investors:"1337 Ventures, Tunku Zain Al-'Abidin",align:"🟠",
- what:"Consumer lending / cash-advance fintech platform.",
+{rank:26,name:"Cashku",website:"https://cashku.ai",vertical:"FinTech / FSI",stage:"Seed",amountUsd:2.1,amountLabel:"RM10M (~$2.1M)",date:"Aug 2025 — outside window",dateSort:"2025-08-01",inWindow:false,investors:"1337 Ventures, Tunku Zain Al-'Abidin",align:"🟢",
+ oneLiner:"Agentic-AI investment platform ('Malaysia's first AI-powered investment platform').",
+ what:"AI-native digital financial-planning and investment platform (operated by Advisonomics Sdn Bhd, a licensed digital investment manager) using agentic systems to continuously analyze users' finances and adapt recommendations.",
  interesting:"Backed by 1337 Ventures, one of Malaysia's most active domestic seed funds — appears multiple times across this dataset.",
- nvidia:"Consumer lending/credit-scoring could use RAPIDS-accelerated risk models; not confirmed for this company.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ nvidia:"Explicitly AI-native investment advisory could use ML-driven portfolio optimization; not confirmed as NVIDIA-based.",
+ source:"https://fintechnews.my/53749/personal-finance-mgt-pfm/cashku-funding/", sourceName:"Fintech News Malaysia — Cashku Raises RM10 Million"},
 
-{rank:33,name:"BrioHR",website:"https://briohr.com",vertical:"IT Services / Data Science",stage:"Series A",amountUsd:6.4,amountLabel:"RM30M (~$6.4M)",date:"May 2025 — outside window",dateSort:"2025-05-01",inWindow:false,investors:"Openspace Ventures",align:"🟠",
+{rank:27,name:"BrioHR",website:"https://briohr.com",vertical:"IT Services / Data Science",stage:"Series A",amountUsd:6.4,amountLabel:"RM30M (~$6.4M)",date:"May 2025 — outside window",dateSort:"2025-05-01",inWindow:false,investors:"Openspace Ventures",align:"🟠",
+ oneLiner:"HR-tech SaaS covering payroll, performance management, and recruitment for SEA SMEs.",
  what:"HR-tech SaaS platform covering payroll, performance management, and recruitment for SMEs across SEA.",
  interesting:"Backed by Openspace Ventures, one of SEA's most established regional VC firms.",
  nvidia:"HR SaaS is generally not GPU-native; low direct NVIDIA relevance unless adding AI-driven resume screening/analytics at scale.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
 
-{rank:34,name:"Versa",website:null,vertical:"FinTech / FSI",stage:"Series A",amountUsd:6.4,amountLabel:"RM30M (~$6.4M)",date:"Mar 2025 — outside window",dateSort:"2025-03-01",inWindow:false,investors:"AHAM Asset Management",align:"🟠",
- what:"Digital investment/wealth-management platform (money-market and unit-trust style micro-investing) for Malaysian retail investors.",
+{rank:28,name:"Versa",website:"https://versa.com.my",vertical:"FinTech / FSI",stage:"Series A",amountUsd:6.4,amountLabel:"RM30M (~$6.4M)",date:"Mar 2025 — outside window",dateSort:"2025-03-01",inWindow:false,investors:"AHAM Asset Management",align:"🟠",
+ oneLiner:"Digital wealth-management app letting Malaysians save/invest from as little as RM1.",
+ what:"Digital wealth-management app (money-market and unit-trust style micro-investing) for Malaysian retail investors, partnered with AHAM Capital Asset Management; ~270,000 registered users as of 2025.",
  interesting:"Backed by AHAM Asset Management, an established local asset manager rather than a typical VC — a strategic-investor pattern.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://versa.com.my/", sourceName:"Versa — official site"},
 
-{rank:35,name:"Okapi Technologies",website:null,vertical:"Energy (CleanTech / Oil & Gas)",stage:"Debt",amountUsd:1.9,amountLabel:"RM9M (~$1.9M)",date:"Mar 2025 — outside window",dateSort:"2025-03-01",inWindow:false,investors:"Aquila",align:"🟠",
- what:"Cleantech/energy company financed via a debt facility rather than equity — likely capital-intensive infrastructure (e.g. EV charging or battery leasing).",
- interesting:"One of very few debt-financed (vs. equity) rounds in this dataset, suggesting an asset-backed business model.",
+{rank:29,name:"Okapi Technologies",website:"https://okapisolar.com",vertical:"Energy (CleanTech / Oil & Gas)",stage:"Debt",amountUsd:1.9,amountLabel:"RM9M (~$1.9M)",date:"Mar 2025 — outside window",dateSort:"2025-03-01",inWindow:false,investors:"Aquila",align:"🟠",
+ oneLiner:"Zero-upfront residential solar financing platform for Malaysian homeowners.",
+ what:"SEDA-registered Photovoltaic Investor offering zero-upfront residential solar financing, letting Malaysian homeowners switch to solar without upfront capital cost.",
+ interesting:"One of very few debt-financed (vs. equity) rounds in this dataset, consistent with an asset-backed solar-financing business model.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://technode.global/2024/06/24/malaysian-climate-fintech-startup-okapi-technologies-raises-funding-from-the-radical-fund/", sourceName:"TNGlobal — Okapi Technologies raises funding"},
 
-{rank:36,name:"Payd",website:null,vertical:"FinTech / FSI",stage:"Seed",amountUsd:0.4,amountLabel:"RM2M (~$0.4M)",date:"Feb 2025 — outside window",dateSort:"2025-02-01",inWindow:false,investors:"A2D Ventures, Orbit Startups",align:"🟠",
- what:"Earned-wage-access fintech platform letting employees draw earned salary before payday.",
- interesting:"Small seed size relative to peers like Paywatch, which operates the same earned-wage-access model at much larger scale (RM141M Series A).",
+{rank:30,name:"Payd",website:"https://www.justpayd.com",vertical:"FinTech / FSI",stage:"Seed",amountUsd:1.6,amountLabel:"RM7.5M (~$1.6M)",date:"Feb 2025 — outside window",dateSort:"2025-02-01",inWindow:false,investors:"A2D Ventures, Orbit Startups",align:"🟠",
+ oneLiner:"Earned-wage-access platform letting employees draw earned salary before payday.",
+ what:"Earned-wage-access (EWA) fintech platform letting employees draw earned salary before payday; works with 30+ companies enabling ~60,000 employees on-demand wage access, with partners including Starbucks and Tropicana Corporation.",
+ interesting:"Small seed size relative to peers like Paywatch, which operates the same earned-wage-access model at much larger scale.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://vulcanpost.com/809888/payd-on-demand-earned-wage-access-service-malaysia/", sourceName:"Vulcan Post — Payd, M'sian fintech startup"},
 
-{rank:37,name:"ArmourZero",website:null,vertical:"Cybersecurity",stage:"Growth",amountUsd:null,amountLabel:"Undisclosed",date:"Feb 2025 — outside window",dateSort:"2025-02-01",inWindow:false,investors:"Gobi Partners",align:"🟢",
- what:"Cybersecurity-as-a-service platform for SMEs; specific product not independently verified beyond the funding-tracker listing.",
+{rank:31,name:"ArmourZero",website:"https://armourzero.com",vertical:"Cybersecurity",stage:"Growth",amountUsd:null,amountLabel:"Undisclosed (strategic angel round)",date:"Feb 2025 — outside window",dateSort:"2025-02-01",inWindow:false,investors:"Gobi Partners",align:"🟢",
+ oneLiner:"Cloud-based, AI-powered Security-as-a-Service platform for SMEs across MY/SG/Indonesia.",
+ what:"Cloud-based cybersecurity platform offering AI-powered Application Security and Security-as-a-Service (SECaaS) for SMEs, operating in Malaysia, Singapore, and Indonesia; NACSA-recognised and MOSTI-certified.",
  interesting:"Gobi Partners is the most frequently recurring investor across this entire dataset, appearing in at least six separate rounds.",
  nvidia:"Cybersecurity threat-detection AI maps structurally to Morpheus/DOCA-class tooling; not confirmed for this company.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://gobi.vc/gobi-partners-backs-armourzero-to-revolutionise-cybersecurityfor-smes-across-southeast-asia/", sourceName:"Gobi Partners — ArmourZero investment announcement"},
 
-{rank:38,name:"iMotorbike",website:null,vertical:"Auto / AV Infra",stage:"Series A",amountUsd:9.6,amountLabel:"RM45M (~$9.6M)",date:"Jan 2025 — outside window",dateSort:"2025-01-01",inWindow:false,investors:"Headline",align:"🟠",
- what:"Motorbike-focused used-vehicle marketplace, a two-wheeler analogue to Carsome's car marketplace model.",
+{rank:32,name:"iMotorbike",website:"https://imotorbike.com/my/en/",vertical:"Auto / AV Infra",stage:"Series A",amountUsd:9.6,amountLabel:"RM45M (~$9.6M)",date:"Jan 2025 — outside window",dateSort:"2025-01-01",inWindow:false,investors:"Headline",align:"🟠",
+ oneLiner:"SEA's pioneering e-commerce platform for buying/selling certified pre-owned motorcycles.",
+ what:"Motorbike-focused used-vehicle marketplace, a two-wheeler analogue to Carsome's car marketplace model, with 170+ point certification on listed bikes.",
  interesting:"Backed by Headline (formerly e.Ventures), a global VC with limited prior SEA activity in this dataset.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
 
-{rank:39,name:"Collektr",website:null,vertical:"FinTech / FSI",stage:"Pre-A",amountUsd:1.3,amountLabel:"RM6M (~$1.3M)",date:"Nov 2024 — outside window",dateSort:"2024-11-01",inWindow:false,investors:"AC Ventures Malaysia",align:"🟠",
- what:"Debt-collection / receivables-management fintech platform, likely using automated workflows for overdue-account recovery.",
- interesting:"Debt-collection tooling is a niche fintech category with almost no other examples in this dataset.",
- nvidia:"Automated collections scoring could use RAPIDS-class ML acceleration; not confirmed for this company.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+{rank:33,name:"Collektr",website:"https://web.collektr.co",vertical:"Retail",stage:"Pre-A",amountUsd:1.3,amountLabel:"RM6M (~$1.3M)",date:"Nov 2024 — outside window",dateSort:"2024-11-01",inWindow:false,investors:"AC Ventures Malaysia, The Hive SEA, Creador Foundation",align:"🟠",
+ oneLiner:"Livestream-auction marketplace for collectibles (trading cards, sneakers, watches, art).",
+ what:"Livestreaming community marketplace for collectibles (trading cards, toys, watches, sneakers, art), letting users bid live or buy directly; a PSA-authorised grading dealer with a physical collectors' hub at Amcorp Mall, PJ.",
+ interesting:"Corrected from an earlier draft that mischaracterized Collektr as a debt-collection fintech tool — it's actually a livestream-commerce collectibles platform.",
+ nvidia:"Insufficient public information to assess NVIDIA relevance.",
+ source:"https://vulcanpost.com/836838/collektr-malaysia-collectible-marketplace-livestream-bids/", sourceName:"Vulcan Post — Collektr, Malaysian collectible marketplace"},
 
-{rank:40,name:"DF Automation & Robotics",website:null,vertical:"Robotics",stage:"Growth",amountUsd:1.7,amountLabel:"RM8M (~$1.7M)",date:"Nov 2024 — outside window",dateSort:"2024-11-01",inWindow:false,investors:"Vynn Capital, MTDC",align:"🟢",
- what:"Industrial robotics company (autonomous mobile robots / factory automation), co-backed by MTDC, a government-linked deep-tech fund.",
+{rank:34,name:"DF Automation & Robotics",website:"https://www.dfautomation.com",vertical:"Robotics",stage:"Growth",amountUsd:1.7,amountLabel:"RM8M (~$1.7M)",date:"Nov 2024 — outside window",dateSort:"2024-11-01",inWindow:false,investors:"Vynn Capital, MTDC",align:"🟢",
+ oneLiner:"Industrial automation firm designing and manufacturing AGVs for warehouses and factories.",
+ what:"Industrial automation company designing, manufacturing, and maintaining Automated Guided Vehicles (AGVs) for industrial and commercial material handling; operating since 2012.",
  interesting:"One of the clearest hardware-robotics plays in the entire dataset, alongside Move Robotic and JAZRO Robotic Academy.",
  nvidia:"Industrial/mobile robotics is a strong structural fit for Isaac ROS/Sim tooling; specific stack not confirmed.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://www.dfautomation.com/about-us", sourceName:"DF Automation & Robotics — About Us"},
 
-{rank:41,name:"JAZRO Robotic Academy",website:null,vertical:"Robotics",stage:"Seed",amountUsd:0.2,amountLabel:"RM1M (~$0.2M)",date:"Oct 2024 — outside window",dateSort:"2024-10-01",inWindow:false,investors:"Gobi Partners",align:"🟠",
- what:"Robotics education/training academy — a hybrid edtech-robotics business rather than a robotics product company.",
+{rank:35,name:"JAZRO Robotic Academy",website:"https://www.jazro.com.my",vertical:"Robotics",stage:"Seed",amountUsd:0.2,amountLabel:"RM1M (~$0.2M)",date:"Oct 2024 — outside window",dateSort:"2024-10-01",inWindow:false,investors:"Gobi Partners",align:"🟠",
+ oneLiner:"East-coast Malaysia's leading robotics academy teaching STEM/robotics to ages 7–17.",
+ what:"Robotics-education academy — a hybrid edtech-robotics business — teaching robotics and coding to students aged 7–17, both online and in-person; 50,000+ students reached.",
  interesting:"Smallest disclosed round in the dataset, reflecting how early-stage the robotics-education niche is in Malaysia.",
  nvidia:"Education-focused, not itself a GPU workload; potential downstream user of Jetson-class kits in curriculum, unconfirmed.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://www.jazro.com.my/about-us", sourceName:"JAZRO Robotic Academy — About Us"},
 
-{rank:42,name:"Qarbotech",website:null,vertical:"Manufacturing & Industrial",stage:"Seed",amountUsd:1.5,amountLabel:"RM7M (~$1.5M)",date:"Sep 2024 — outside window",dateSort:"2024-09-01",inWindow:false,investors:"500 Global, Better Bite Ventures",align:"🟠",
- what:"Automotive-parts / carbon-adjacent manufacturing-tech company; specific product not independently verified beyond the funding-tracker listing.",
- interesting:"Raised twice within roughly a year (Dec 2023 and Sep 2024 per the tracker), suggesting fast iterative fundraising.",
+{rank:36,name:"Qarbotech",website:"https://www.qarbotech.com",vertical:"AgTech",stage:"Seed",amountUsd:1.5,amountLabel:"RM7M / $1.5M (raised across 2023–2024 rounds)",date:"Sep 2024 — outside window",dateSort:"2024-09-01",inWindow:false,investors:"500 Global, Better Bite Ventures, ID Capital, EQT Foundation",align:"🟠",
+ oneLiner:"Agritech startup boosting crop yields via a biocompatible photosynthesis-enhancement technology.",
+ what:"Agritech startup developing a biocompatible photosynthesis-enhancement technology to boost plant growth and productivity, expanding into Indonesia, Thailand, and Vietnam.",
+ interesting:"Raised twice within roughly a year (Dec 2023 seed, then a further $1.5M in 2024), suggesting fast iterative fundraising backed partly by Temasek Foundation and Khazanah's Dana Impak innovation-challenge grants.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://statnano.com/news/74129/Malaysian-Startup-Qarbotech-Secures-15M-to-Expand-Agritech-Solutions-Across-Southeast-Asia", sourceName:"STATNANO — Qarbotech Secures $1.5M"},
 
-{rank:43,name:"Bateriku",website:null,vertical:"Energy (CleanTech / Oil & Gas)",stage:"Series B",amountUsd:7.4,amountLabel:"RM35M (~$7.4M)",date:"Sep 2024 — outside window",dateSort:"2024-09-01",inWindow:false,investors:"KWAP, Gobi Partners",align:"🟠",
- what:"EV battery-swap network operator for two- and three-wheeler vehicles, addressing range-anxiety and charging-time friction.",
+{rank:37,name:"Bateriku",website:"https://www.bateriku.com",vertical:"Energy (CleanTech / Oil & Gas)",stage:"Series B",amountUsd:7.4,amountLabel:"RM35M (~$7.4M)",date:"Sep 2024 — outside window",dateSort:"2024-09-01",inWindow:false,investors:"KWAP, Gobi Partners",align:"🟠",
+ oneLiner:"On-demand car-battery replacement and EV battery-swap network operator.",
+ what:"On-demand car-battery replacement and roadside-assistance provider that has expanded into EV battery-swap stations for two/three-wheelers via a partnership with Ryde EV.",
  interesting:"Backed by KWAP, Malaysia's public-sector pension fund — a government-linked-investor pattern that recurs across several later-stage rounds in this dataset.",
  nvidia:"Battery-swap logistics/routing optimization could use cuOpt-class acceleration; not confirmed for this company.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
 
-{rank:44,name:"Paywatch",website:null,vertical:"FinTech / FSI",stage:"Series A",amountUsd:20,amountLabel:"RM141M this round; $20M raised per Secondtalent",date:"Jun 2024 — outside window",dateSort:"2024-06-01",inWindow:false,investors:"Third Prime, Vanderbilt University",align:"🟢",
- what:"AI-driven earned-wage-access and financial-wellness platform, explicitly marketed as using AI for eligibility/risk decisioning.",
+{rank:38,name:"Paywatch",website:"https://www.paywatch.com.my",vertical:"FinTech / FSI",stage:"Series A",amountUsd:20,amountLabel:"RM141M this round; $20M raised per Secondtalent",date:"Jun 2024 — outside window",dateSort:"2024-06-01",inWindow:false,investors:"Third Prime, Vanderbilt University",align:"🟢",
+ oneLiner:"SEA's leading earned-wage-access provider, backed by Citi, OCBC, HSBC, and CIMB.",
+ what:"AI-driven earned-wage-access and financial-wellness platform serving 200,000+ employees with over $150M in EWA transactions processed; backed by top-tier banks (Citi, OCBC, HSBC, CIMB).",
  interesting:"Largest single-round figure in the entire dataset (RM141M) among non-unicorn companies, and explicitly AI-branded unlike most fintech peers here.",
  nvidia:"Explicitly AI-driven underwriting/risk decisioning is a plausible RAPIDS/ML-inference fit; not confirmed as NVIDIA-based.",
- source:"https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/", sourceName:"Secondtalent — AI Companies in Malaysia"},
+ source:"https://www.mida.gov.my/paywatch-championing-fair-financial-access-in-southeast-asia/", sourceName:"MIDA — Paywatch: Championing Fair Financial Access"},
 
-{rank:45,name:"LiveIn",website:null,vertical:"Smart Spaces",stage:"Pre-B",amountUsd:2.6,amountLabel:"RM12M (~$2.6M)",date:"May 2024 — outside window",dateSort:"2024-05-01",inWindow:false,investors:"Korea Investment Partners",align:"🟠",
- what:"PropTech platform (likely property management or co-living operations); specific product not independently verified beyond the funding-tracker listing.",
- interesting:"Backed by a Korean VC (Korea Investment Partners) — one of the few non-SEA/non-US investors in this dataset.",
+{rank:39,name:"LiveIn",website:"https://www.livein.com",vertical:"Smart Spaces",stage:"Pre-B",amountUsd:2.6,amountLabel:"RM12M (~$2.6M); RM51.4M cumulative",date:"May 2024 — outside window",dateSort:"2024-05-01",inWindow:false,investors:"Korea Investment Partners, Malaysia Debt Ventures",align:"🟠",
+ oneLiner:"PropTech converting oversupplied properties into managed long-stay rental housing for young people.",
+ what:"PropTech platform (evolved from Hostel Hunting, founded 2015) building a long-stay rental community, converting existing oversupplied properties into affordable, professionally managed rental homes.",
+ interesting:"Backed by a Korean VC (Korea Investment Partners) — one of the few non-SEA/non-US investors in this dataset — and by Malaysia Debt Ventures for regional (Thailand) expansion.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://www.mdv.com.my/v3/malaysian-proptech-startup-livein-raises-us8-3-million-for-regional-expansion/", sourceName:"Malaysia Debt Ventures — LiveIn raises US$8.3 million"},
 
-{rank:46,name:"Lapasar",website:null,vertical:"AgTech",stage:"Growth",amountUsd:6.6,amountLabel:"RM31M (~$6.6M)",date:"Feb 2024 — outside window",dateSort:"2024-02-01",inWindow:false,investors:"KWAP",align:"🟠",
- what:"B2B agricultural/fresh-produce trade marketplace connecting farmers and wholesale buyers.",
- interesting:"Backed by KWAP at growth stage, another example of the pension-fund-as-late-stage-investor pattern seen elsewhere in this dataset (also Bateriku).",
- nvidia:"Demand-forecasting for perishable agri-trade could use RAPIDS-class acceleration; not confirmed for this company.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+{rank:40,name:"Lapasar",website:"https://lapasar.com",vertical:"Retail",stage:"Growth",amountUsd:6.6,amountLabel:"RM31M (~$6.6M)",date:"Feb 2024 — outside window",dateSort:"2024-02-01",inWindow:false,investors:"KWAP",align:"🟠",
+ oneLiner:"Malaysia's largest B2B procurement marketplace, connecting 10,000+ suppliers to businesses/GLCs.",
+ what:"Malaysia's largest B2B e-procurement marketplace, pairing 10,000+ verified suppliers and 2M+ SKUs with owned warehouses and delivery fleet; serves GLCs, large corporations, and government-linked entities.",
+ interesting:"Corrected from an earlier draft that mischaracterized Lapasar as agri-specific — it's a general B2B procurement marketplace, not agriculture-focused. Backed by KWAP at growth stage, another pension-fund-as-late-stage-investor example (also Bateriku).",
+ nvidia:"Demand-forecasting for B2B procurement could use RAPIDS-class acceleration; not confirmed for this company.",
+ source:"https://lapasar.com/", sourceName:"Lapasar — official site"},
 
-{rank:47,name:"MADCash",website:null,vertical:"FinTech / FSI",stage:"Pre-A",amountUsd:1.1,amountLabel:"RM5M (~$1.1M)",date:"Oct 2023 — outside window",dateSort:"2023-10-01",inWindow:false,investors:"Artem Ventures",align:"🟠",
- what:"Consumer fintech/cash-management platform; specific product not independently verified beyond the funding-tracker listing.",
+{rank:41,name:"MADCash",website:"https://getmadcash.com",vertical:"FinTech / FSI",stage:"Pre-A",amountUsd:1.1,amountLabel:"RM5M (~$1.1M)",date:"Oct 2023 — outside window",dateSort:"2023-10-01",inWindow:false,investors:"Artem Ventures, MSW Ventures, ScaleUp Founders Fund",align:"🟠",
+ oneLiner:"Shariah-compliant microfunding platform giving unbanked women entrepreneurs zero-interest capital.",
+ what:"Shariah-compliant fintech providing zero-interest microfunds to unbanked/underbanked women entrepreneurs, building alternative credit scoring to increase their future bankability.",
  interesting:"Artem Ventures co-invested in both MADCash and Ejen2u — one of the more active seed investors in the earlier-window portion of this dataset.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://getmadcash.com/about-us/", sourceName:"MADCash — About Us"},
 
-{rank:48,name:"Ejen2u",website:null,vertical:"Smart Spaces",stage:"Pre-A",amountUsd:1.5,amountLabel:"RM7M (~$1.5M)",date:"Oct 2023 — outside window",dateSort:"2023-10-01",inWindow:false,investors:"Gobi Partners, Artem Ventures",align:"🟠",
- what:"PropTech platform connecting real-estate agents with listings/leads; name translates roughly to 'agent for you' in Malay.",
- interesting:"Co-backed by two of the dataset's most recurring investors (Gobi Partners and Artem Ventures) in the same round.",
+{rank:42,name:"Ejen2u",website:"https://ejen2u.com",vertical:"Retail",stage:"Pre-A",amountUsd:1.5,amountLabel:"RM7M (~$1.5M)",date:"Oct 2023 — outside window",dateSort:"2023-10-01",inWindow:false,investors:"Gobi Partners, Artem Ventures",align:"🟠",
+ oneLiner:"AI-powered reseller-management platform (EjenGO) for Malaysian MSME agents and dropshippers.",
+ what:"Reseller digital ecosystem helping Malaysian MSME brand owners, stockists, agents, and dropshippers grow their businesses, via its AI-integrated EjenGO agent-management platform.",
+ interesting:"Corrected from an earlier draft that mischaracterized Ejen2u as a real-estate proptech platform — it's actually a reseller/agent-commerce ecosystem for MSMEs, not property. Co-backed by two of the dataset's most recurring investors (Gobi Partners and Artem Ventures) in the same round.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://web.ejen2u.com/", sourceName:"Ejen2u — official site"},
 
-{rank:49,name:"Krenovator",website:null,vertical:"Edtech / Higher Ed",stage:"Seed",amountUsd:null,amountLabel:"Undisclosed",date:"May 2025 — outside window",dateSort:"2025-05-01",inWindow:false,investors:"Ignite Asia",align:"🟠",
- what:"Skills-training / vocational-education platform; specific product not independently verified beyond the funding-tracker listing.",
- interesting:"One of only two edtech-adjacent entries in this dataset, alongside JAZRO Robotic Academy.",
+{rank:43,name:"Krenovator",website:"https://www.krenovator.io",vertical:"IT Services / Data Science",stage:"Seed",amountUsd:null,amountLabel:"Undisclosed",date:"May 2025 — outside window",dateSort:"2025-05-01",inWindow:false,investors:"Ignite Asia",align:"🟠",
+ oneLiner:"AI-powered tech-talent platform connecting 20,000+ SEA developers with global employers.",
+ what:"AI-powered tech-talent platform connecting Southeast Asian developers with international employers, offering an AI Coding Assistant, AI CV Maker, and AI Career Advisor; community of 20,000+ tech professionals.",
+ interesting:"Corrected from an earlier draft that mischaracterized Krenovator as an edtech company — it's a talent-matching/recruitment platform, not education.",
  nvidia:"Insufficient public information to assess NVIDIA relevance.",
- source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"},
+ source:"https://technode.global/2025/05/05/malaysias-krenovator-secures-seed-funding-to-enhance-ai-powered-tech-talent-platform/", sourceName:"TNGlobal — Krenovator secures seed funding"},
 
-{rank:50,name:"BoomGrow",website:null,vertical:"AgTech",stage:"Pre-A",amountUsd:null,amountLabel:"Undisclosed",date:"Oct 2023 — outside window",dateSort:"2023-10-01",inWindow:false,investors:"Gobi Partners",align:"🟠",
- what:"Vertical/urban-farming agtech company using controlled-environment agriculture to grow produce closer to urban consumers.",
- interesting:"Represents the vertical-farming sub-category of AgTech, distinct from Lapasar's trade-marketplace model.",
+{rank:44,name:"BoomGrow",website:"https://www.boomgrowfarms.com",vertical:"AgTech",stage:"Pre-A",amountUsd:null,amountLabel:"Undisclosed",date:"Oct 2023 — outside window",dateSort:"2023-10-01",inWindow:false,investors:"Gobi Partners",align:"🟠",
+ oneLiner:"Vertical-farming startup growing pesticide-free greens in repurposed shipping containers.",
+ what:"Vertical/urban-farming agtech company growing pesticide-free vegetables, microgreens, and herbs in high-tech repurposed shipping containers, supplying hotels, restaurants, and grocers; a Forbes Asia '100 to Watch' honoree.",
+ interesting:"Represents the vertical-farming/controlled-environment-agriculture sub-category of AgTech, distinct from Pacton's aquaculture and Lapasar's B2B trade-marketplace models.",
  nvidia:"Controlled-environment ag sensing/automation could use edge-AI vision for crop monitoring; not confirmed for this company.",
+ source:"https://www.wipo.int/en/web/ip-advantage/w/stories/boomgrow-combining-precision-farming-and-vertical-agriculture", sourceName:"WIPO — BoomGrow: Combining Precision Farming and Vertical Agriculture"},
+
+{rank:45,name:"Naluri",website:"https://naluri.life",vertical:"Healthcare & Life Sciences",stage:"Series B",amountUsd:19.9,amountLabel:"RM23M this round; $19.9M raised across all rounds",date:"Aug 2025 — outside window",dateSort:"2025-08-01",inWindow:false,investors:"TELUS Global Ventures",align:"🟢",
+ oneLiner:"AI+human-coaching platform for employer-sponsored mental and chronic-disease health programs.",
+ what:"Healthtech startup blending human coaching with AI-driven personalization for mental and physical health / chronic-disease management programs, sold B2B2C via employers and insurers.",
+ interesting:"One of the more mature, well-documented companies in the dataset, with cumulative funding disclosed across multiple rounds rather than a single-round figure.",
+ nvidia:"Personalized-health AI/NLP coaching workloads could use NeMo/clinical-NLP tooling; not confirmed as NVIDIA-based.",
  source:"https://malaysia4u.com/funding", sourceName:"Malaysia4U Funding Tracker"}
 ];
 
@@ -455,7 +470,8 @@ const SOURCES = [
   ["Secondtalent — Top 10 AI Companies & Startups in Malaysia (2026)", "https://www.secondtalent.com/resources/ai-companies-startups-in-malaysia/"],
   ["Seedtable — 30 Best Startups in Kuala Lumpur", "https://seedtable.com/best-startups-in-kuala-lumpur"],
   ["DealStreetAsia — Southeast Asia Deal Review Q1 2026", "https://www.dealstreetasia.com/stories/southeast-asia-deal-review-q1-2026-summary-481038"],
-  ["abovea.tech — Malaysia startup statistics 2026", "https://abovea.tech/malaysia-startup-statistics/"]
+  ["abovea.tech — Malaysia startup statistics 2026", "https://abovea.tech/malaysia-startup-statistics/"],
+  ["Individual company sources — see each row's expanded detail for its specific citation", "#"]
 ];
 
 // ---- render ----
@@ -463,7 +479,10 @@ function fmtAmount(row){
   if(row.amountLabel) return row.amountLabel;
   return "—";
 }
-function esc(s){ return (s||"").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function escFix(s){ return (s||"").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function hostOf(url){
+  try{ return new URL(url).hostname.replace(/^www\./,''); } catch(e){ return url; }
+}
 
 function render(){
   const tbody = document.getElementById('tbody');
@@ -488,16 +507,19 @@ function render(){
 
   rows.forEach(r=>{
     const tr = document.createElement('tr');
+    tr.className = 'main-row';
     tr.innerHTML = `
       <td class="rank">${r.rank}</td>
-      <td class="co-name">${r.website ? `<a href="${r.website}" target="_blank" rel="noopener">${esc(r.name)}</a>` : esc(r.name)}</td>
-      <td><span class="tag">${esc(r.vertical)}</span></td>
-      <td>${esc(r.stage)}</td>
-      <td>${esc(fmtAmount(r))}</td>
-      <td>${esc(r.date)}</td>
+      <td class="co-name">${escFix(r.name)}</td>
+      <td class="website">${r.website ? `<a href="${r.website}" target="_blank" rel="noopener">${escFix(hostOf(r.website))}</a>` : '<span style="color:var(--text-faint)">unconfirmed</span>'}</td>
+      <td class="oneliner">${escFix(r.oneLiner)}</td>
+      <td><span class="tag">${escFix(r.vertical)}</span></td>
+      <td>${escFix(r.stage)}</td>
+      <td>${escFix(fmtAmount(r))}</td>
+      <td>${escFix(r.date)}</td>
       <td>${r.inWindow ? '<span class="tag badge-window">In window</span>' : '<span class="tag badge-outside">Breadth</span>'}</td>
       <td class="align">${r.align}</td>
-      <td>${esc(r.investors)}</td>
+      <td>${escFix(r.investors)}</td>
     `;
     tr.addEventListener('click', ()=>toggleDetail(r.rank));
     tbody.appendChild(tr);
@@ -505,11 +527,11 @@ function render(){
     const detailTr = document.createElement('tr');
     detailTr.className = 'detail-row';
     detailTr.id = 'detail-row-' + r.rank;
-    detailTr.innerHTML = `<td colspan="9"><div class="detail" id="detail-${r.rank}">
-      <h4>What they do</h4><p>${esc(r.what)}</p>
-      <h4>Most interesting detail</h4><p>${esc(r.interesting)}</p>
-      <h4>NVIDIA notes (hedged, not a recommendation)</h4><p>${esc(r.nvidia)}</p>
-      <h4>Source</h4><p><a href="${r.source}" target="_blank" rel="noopener">${esc(r.sourceName)}</a></p>
+    detailTr.innerHTML = `<td colspan="11"><div class="detail" id="detail-${r.rank}">
+      <h4>Full description</h4><p>${escFix(r.what)}</p>
+      <h4>Most interesting detail</h4><p>${escFix(r.interesting)}</p>
+      <h4>NVIDIA notes (hedged, not a recommendation)</h4><p>${escFix(r.nvidia)}</p>
+      <h4>Source</h4><p><a href="${r.source}" target="_blank" rel="noopener">${escFix(r.sourceName)}</a></p>
     </div></td>`;
     tbody.appendChild(detailTr);
   });
@@ -535,12 +557,14 @@ function renderStats(){
   const verticals = new Set(DATA.map(r=>r.vertical)).size;
   const strong = DATA.filter(r=>r.align==='🟢').length;
   const inWindowCount = DATA.filter(r=>r.inWindow).length;
+  const withWebsite = DATA.filter(r=>r.website).length;
   const stats = [
     [total, 'Companies tracked'],
     ['$'+totalUsd.toFixed(0)+'M+', 'Disclosed capital (approx., USD)'],
     [verticals, 'Inception verticals covered'],
     [strong, '🟢 Strong NVIDIA potential'],
-    [inWindowCount, 'In true 6-month window']
+    [inWindowCount, 'In true 6-month window'],
+    [withWebsite+'/'+total, 'With verified website']
   ];
   const el = document.getElementById('stats');
   el.innerHTML = stats.map(([n,l])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
@@ -565,7 +589,7 @@ function renderVerticalTable(){
   let html = '<tr><th>Vertical</th><th>Count</th><th>Top Company</th></tr>';
   covered.forEach(v=>{
     const list = map[v].sort((a,b)=>a.rank-b.rank);
-    html += `<tr><td>${esc(v)}</td><td>${list.length}</td><td>${esc(list[0].name)}</td></tr>`;
+    html += `<tr><td>${escFix(v)}</td><td>${list.length}</td><td>${escFix(list[0].name)}</td></tr>`;
   });
   document.getElementById('verticalTable').innerHTML = html;
   const note = document.createElement('p');
@@ -577,7 +601,7 @@ function renderVerticalTable(){
 function renderSources(){
   let html = '<tr><th>Source</th><th>URL</th></tr>';
   SOURCES.forEach(([name,url])=>{
-    html += `<tr><td>${esc(name)}</td><td><a href="${url}" target="_blank" rel="noopener">${esc(url)}</a></td></tr>`;
+    html += `<tr><td>${escFix(name)}</td><td>${url==='#' ? '—' : `<a href="${url}" target="_blank" rel="noopener">${escFix(url)}</a>`}</td></tr>`;
   });
   document.getElementById('sourcesTable').innerHTML = html;
 }
